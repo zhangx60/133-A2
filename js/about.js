@@ -10,7 +10,6 @@ function parseTweets(runkeeper_tweets) {
 	});
 	
 	//This line modifies the DOM, searching for the tag with the numberTweets ID and updating the text.
-	//It works correctly, your task is to update the text of the other tags in the HTML file!
 	document.getElementById('numberTweets').innerText = tweet_array.length;	
     if (tweet_array.length === 0) {
         return;
@@ -39,6 +38,50 @@ function parseTweets(runkeeper_tweets) {
 	//Put the dates into the page
 	document.getElementById('firstDate').innerText = firstDateText;
 	document.getElementById('lastDate').innerText = lastDateText;
+
+	var completedCount = 0;
+	var liveCount = 0;
+	var achievementCount = 0;
+	var miscCount = 0;
+
+	for (var i = 0; i < tweet_array.length; i++) {
+		var source = tweet_array[i].source;
+
+		if (source == "completed_event") {
+			completedCount = completedCount + 1;
+		} else if (source == "live_event") {
+			liveCount = liveCount + 1;
+		} else if (source == "achievement") {
+			achievementCount = achievementCount + 1;
+		} else {
+			miscCount = miscCount + 1;
+		}
+	}
+
+	//calculate the percentages
+	var total = tweet_array.length;
+	var completedPct = completedCount / total * 100;
+	var livePct = liveCount / total * 100;
+	var achievementPct = achievementCount / total * 100;
+	var miscPct = miscCount / total * 100;
+
+	//Format the percentages with exactly two decimal places
+	var pctFormat = {notation: 'fixed', precision: 2};
+
+	//"completedEvents" appears TWICE on the page, so we need querySelectorAll and a loop
+	var completedSpans = document.querySelectorAll('.completedEvents');
+	for (var i = 0; i < completedSpans.length; i++) {
+		completedSpans[i].innerText = completedCount;
+	}
+
+	//These spans only appear once
+	document.querySelector('.completedEventsPct').innerText = math.format(completedPct, pctFormat) + '%';
+	document.querySelector('.liveEvents').innerText = liveCount;
+	document.querySelector('.liveEventsPct').innerText = math.format(livePct, pctFormat) + '%';
+	document.querySelector('.achievements').innerText = achievementCount;
+	document.querySelector('.achievementsPct').innerText = math.format(achievementPct, pctFormat) + '%';
+	document.querySelector('.miscellaneous').innerText = miscCount;
+	document.querySelector('.miscellaneousPct').innerText = math.format(miscPct, pctFormat) + '%';
 }
 
 //Wait for the DOM to load
