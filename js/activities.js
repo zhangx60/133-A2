@@ -10,6 +10,43 @@ function parseTweets(runkeeper_tweets) {
 	});
 
 	//TODO: create a new array or manipulate tweet_array to create a graph of the number of tweets containing each type of activity.
+	var activityCounts = {};
+
+	for (var i = 0; i < tweet_array.length; i++) {
+		var tweet = tweet_array[i];
+
+		//Only completed tweets have an activity type
+		if (tweet.source == "completed_event") {
+			var type = tweet.activityType;
+
+			//First time we see this type: start at 1. Otherwise: add 1.
+			if (activityCounts[type] == undefined) {
+				activityCounts[type] = 1;
+			} else {
+				activityCounts[type] = activityCounts[type] + 1;
+			}
+		}
+	}
+    //Turn the dictionary into an array of objects so we can sort it and graph it
+	var activityCountArray = [];
+	var activityTypes = Object.keys(activityCounts);
+
+	for (var i = 0; i < activityTypes.length; i++) {
+		var type = activityTypes[i];
+		activityCountArray.push({activityType: type, count: activityCounts[type]});
+	}
+
+	//Sort from the most tweets to the least tweets
+	activityCountArray.sort(function(a, b) {
+		return b.count - a.count;
+	});
+
+	//Put the results into the page
+	document.getElementById('numberActivities').innerText = activityCountArray.length;
+	document.getElementById('firstMost').innerText = activityCountArray[0].activityType;
+	document.getElementById('secondMost').innerText = activityCountArray[1].activityType;
+	document.getElementById('thirdMost').innerText = activityCountArray[2].activityType;
+
 
 	activity_vis_spec = {
 	  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
