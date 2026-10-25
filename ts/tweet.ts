@@ -59,8 +59,13 @@ class Tweet {
         //TODO: parse the activity type from the text of the tweet
         //Split the tweet into words [0]    [1]    [2] [3] [4] [5]
         var words = this.text.split(" ");
+
+        //If word [4] is a unit (km or mi), the activity type is word [5]
+        if (words[4] == "km" || words[4] == "mi") {
+            return words[5];
+        }
         return words[3];
-    }
+      }
 
     get distance():number {
         if(this.source != 'completed_event') {
