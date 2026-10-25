@@ -12,10 +12,11 @@ function parseTweets(runkeeper_tweets) {
 	//This line modifies the DOM, searching for the tag with the numberTweets ID and updating the text.
 	//It works correctly, your task is to update the text of the other tags in the HTML file!
 	document.getElementById('numberTweets').innerText = tweet_array.length;	
-	//Find the earliest and latest tweets
-	//Start by assuming the first tweet is both the earliest and the latest
-	var earliestTweet = tweet_array[0];
-	var latestTweet = tweet_array[0];
+    if (tweet_array.length === 0) {
+        return;
+    }
+	var earliestTweet = tweet_array[0];//Find the earliest and latest tweets
+	var latestTweet = tweet_array[0];//Start by assuming the first tweet is both the earliest and the latest
 
 	//Go through every tweet and compare time
 	for (var i = 0; i < tweet_array.length; i++) {
