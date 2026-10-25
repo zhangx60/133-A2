@@ -57,7 +57,9 @@ class Tweet {
             return "unknown";
         }
         //TODO: parse the activity type from the text of the tweet
-        return "";
+        //Split the tweet into words [0]    [1]    [2] [3] [4] [5]
+        var words = this.text.split(" ");
+        return words[3];
     }
 
     get distance():number {
