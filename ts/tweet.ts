@@ -30,6 +30,9 @@ class Tweet {
     //returns a boolean, whether the text includes any content written by the person tweeting.
     get written():boolean {
         //TODO: identify whether the tweet is written
+        if (this.text.includes(" - ")) {
+            return true;
+        }
         return false;
     }
 
@@ -38,7 +41,15 @@ class Tweet {
             return "";
         }
         //TODO: parse the written text from the tweet
-        return "";
+        var startIndex = this.text.indexOf(" - ") + 3; //+3 skips over the " - "
+        var endIndex = this.text.indexOf("https://t.co");
+
+        //Ifno link, take everything until the end of the tweet
+        if (endIndex == -1) {
+            endIndex = this.text.length;
+        }
+        var result = this.text.substring(startIndex, endIndex);
+        return result.trim(); //trim removes extra spaces at the start and end
     }
 
     get activityType():string {

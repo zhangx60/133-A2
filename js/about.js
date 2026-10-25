@@ -82,6 +82,21 @@ function parseTweets(runkeeper_tweets) {
 	document.querySelector('.achievementsPct').innerText = math.format(achievementPct, pctFormat) + '%';
 	document.querySelector('.miscellaneous').innerText = miscCount;
 	document.querySelector('.miscellaneousPct').innerText = math.format(miscPct, pctFormat) + '%';
+
+	var writtenCount = 0;
+	for (var i = 0; i < tweet_array.length; i++) {
+		var tweet = tweet_array[i];
+
+		//Only count tweets that are completed events AND have written text
+		if (tweet.source == "completed_event" && tweet.written) {
+			writtenCount = writtenCount + 1;
+		}
+	}
+	//percentage is out of the completed tweets
+	var writtenPct = writtenCount / completedCount * 100;
+
+	document.querySelector('.written').innerText = writtenCount;
+	document.querySelector('.writtenPct').innerText = math.format(writtenPct, pctFormat) + '%';
 }
 
 //Wait for the DOM to load
