@@ -53,8 +53,13 @@ function parseTweets(runkeeper_tweets) {
 	  "description": "A graph of the number of Tweets containing each type of activity.",
 	  "data": {
 	    "values": tweet_array
-	  }
+	  },
 	  //TODO: Add mark and encoding
+	   "mark": "bar",
+	  "encoding": {
+	    "x": {"field": "activityType", "type": "nominal", "sort": "-y", "title": "Activity type"},
+	    "y": {"field": "count", "type": "quantitative", "title": "Number of tweets"}
+	  }
 	};
 	vegaEmbed('#activityVis', activity_vis_spec, {actions:false});
 
