@@ -65,6 +65,44 @@ function parseTweets(runkeeper_tweets) {
 
 	//TODO: create the visualizations which group the three most-tweeted activities by the day of the week.
 	//Use those visualizations to answer the questions about which activities tended to be longest and when.
+	var firstType = activityCountArray[0].activityType;
+	var secondType = activityCountArray[1].activityType;
+	var thirdType = activityCountArray[2].activityType;
+
+	var distanceArray = [];
+
+	for (var i = 0; i < tweet_array.length; i++) {
+		var tweet = tweet_array[i];
+
+		if (tweet.source == "completed_event") {
+			var type = tweet.activityType;
+
+			//Only keep the top three activity types
+			if (type == firstType || type == secondType || type == thirdType) {
+				distanceArray.push({
+					activityType: type,
+					distance: tweet.distance,
+					time: tweet.time
+				});
+			}
+		}
+	}
+	//1: every tweet's distance by day 
+	distance_vis_spec = {
+	  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+	  "description": "Distances of the three most tweeted-about activities by day of the week.",
+	  "data": {
+	    "values": distanceArray
+	  },
+	  "mark": "point",
+	  "encoding": {
+	    "x": {"field": "time", "timeUnit": "day", "type": "ordinal", "title": "time (day)"},
+	    "y": {"field": "distance", "type": "quantitative", "title": "distance"},
+	    "color": {"field": "activityType", "type": "nominal", "title": "activityType"}
+	  }
+	};
+	vegaEmbed('#distanceVis', distance_vis_spec, {actions:false});
+
 }
 
 //Wait for the DOM to load
