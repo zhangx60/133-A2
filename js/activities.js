@@ -117,6 +117,7 @@ function parseTweets(runkeeper_tweets) {
 	  }
 	};
 	vegaEmbed('#distanceVis', distance_vis_spec, {actions:false});
+	vegaEmbed('#distanceVisAggregated', distance_vis_aggregated_spec, {actions:false});
 
 	//show the first graph and hide the mean graph
 	var distanceVis = document.getElementById('distanceVis');
