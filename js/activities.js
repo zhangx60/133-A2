@@ -101,8 +101,48 @@ function parseTweets(runkeeper_tweets) {
 	    "color": {"field": "activityType", "type": "nominal", "title": "activityType"}
 	  }
 	};
+
+	//2: y=mean distance for each activity on each day
+	distance_vis_aggregated_spec = {
+	  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+	  "description": "Mean distances of the three most tweeted-about activities by day of the week.",
+	  "data": {
+	    "values": distanceArray
+	  },
+	  "mark": "point",
+	  "encoding": {
+	    "x": {"field": "time", "timeUnit": "day", "type": "ordinal", "title": "time (day)"},
+	    "y": {"field": "distance", "aggregate": "mean", "type": "quantitative", "title": "Mean of distance"},
+	    "color": {"field": "activityType", "type": "nominal", "title": "activityType"}
+	  }
+	};
 	vegaEmbed('#distanceVis', distance_vis_spec, {actions:false});
 
+	//show the first graph and hide the mean graph
+	var distanceVis = document.getElementById('distanceVis');
+	var distanceVisAggregated = document.getElementById('distanceVisAggregated');
+	var button = document.getElementById('aggregate');
+	distanceVis.style.display = "block";
+	distanceVisAggregated.style.display = "none";
+
+	//When the button is clicked, switch which graph is shown
+	button.addEventListener('click', function() {
+		if (distanceVisAggregated.style.display == "none") {
+			//Show the means graph
+			distanceVis.style.display = "none";
+			distanceVisAggregated.style.display = "block";
+			button.innerText = "Show all activities";
+		} else {
+			//Show the all-points graph
+			distanceVis.style.display = "block";
+			distanceVisAggregated.style.display = "none";
+			button.innerText = "Show means";
+		}
+	});
+	//aanswers based on the graphs
+	document.getElementById('longestActivityType').innerText = "bike";
+	document.getElementById('shortestActivityType').innerText = "walk";
+	document.getElementById('weekdayOrWeekendLonger').innerText = "weekends";
 }
 
 //Wait for the DOM to load
