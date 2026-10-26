@@ -38,7 +38,8 @@ function addEventHandlerForSearch() {
 		//Clear the old rows from the table
 		table.innerHTML = "";
 
-
+		//Show searched history text
+		searchText.innerText = text;
 
 		//If the search box is empty, show 0 and stop here (the table stays empty)
 		if (text == "") {
