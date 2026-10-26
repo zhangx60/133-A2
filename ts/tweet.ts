@@ -72,7 +72,18 @@ class Tweet {
             return 0;
         }
         //TODO: prase the distance from the text of the tweet
-        return 0;
+        //word [3] is the number, word [4] is the unit
+        var words = this.text.split(" ");
+        var number = parseFloat(words[3]);
+        var unit = words[4];
+        if (unit == "mi") {
+            return number;
+        }
+        //Kilo to miles (1 mi = 1.609 km)
+        if (unit == "km") {
+            return number / 1.609;
+        }
+        return 0;//No distance
     }
 
     getHTMLTableRow(rowNumber:number):string {
