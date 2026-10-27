@@ -95,11 +95,15 @@ function parseTweets(runkeeper_tweets) {
 	  "data": {
 	    "values": distanceArray
 	  },
-	  "mark": "point",
+	  "params": [
+	    {"name": "pickActivity", "select": {"type": "point", "fields": ["activityType"]}, "bind": "legend"}
+	  ],
+	  "mark": {"type": "point", "tooltip": true},
 	  "encoding": {
 	    "x": {"field": "time", "timeUnit": "day", "type": "ordinal", "title": "time (day)"},
 	    "y": {"field": "distance", "type": "quantitative", "title": "distance"},
-	    "color": {"field": "activityType", "type": "nominal", "title": "activityType"}
+	    "color": {"field": "activityType", "type": "nominal", "title": "activityType"},
+	    "opacity": {"condition": {"param": "pickActivity", "value": 1}, "value": 0.05}
 	  }
 	};
 
@@ -110,11 +114,15 @@ function parseTweets(runkeeper_tweets) {
 	  "data": {
 	    "values": distanceArray
 	  },
-	  "mark": "point",
+	  "params": [
+	    {"name": "pickActivity", "select": {"type": "point", "fields": ["activityType"]}, "bind": "legend"}
+	  ],
+	  "mark": {"type": "point", "tooltip": true},
 	  "encoding": {
 	    "x": {"field": "time", "timeUnit": "day", "type": "ordinal", "title": "time (day)"},
 	    "y": {"field": "distance", "aggregate": "mean", "type": "quantitative", "title": "Mean of distance"},
-	    "color": {"field": "activityType", "type": "nominal", "title": "activityType"}
+	    "color": {"field": "activityType", "type": "nominal", "title": "activityType"},
+	    "opacity": {"condition": {"param": "pickActivity", "value": 1}, "value": 0.05}
 	  }
 	};
 	vegaEmbed('#distanceVis', distance_vis_spec, {actions:false});

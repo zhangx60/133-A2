@@ -2,10 +2,12 @@
 
 1. How many assignment points do you believe you completed (replace the *'s with your numbers)?
 
-*/10
+11/10
 - 3/3 Summarizing tweets
 - 4/4 Identifying the most popular activities
 - 3/3 Adding a text search interface
+- 1/1 Bonus: I made the two distance charts interactive using Vega-Lite selections. 
+Clicking an activity type in the legend highlights only that activity’s points and hovering over a point shows a tooltip with its values. 
 
 2. How long, in hours, did it take you to complete this assignment?
 I spend about 5.5 hour on the first day review this project and catch up some knowlege then
