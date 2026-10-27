@@ -25,31 +25,52 @@ class Tweet {
         //Else is miscellaneous
         return "miscellaneous";
     }
+    //Helper function: get the text between " - " and the link, without the #Runkeeper hashtag
+    private extractText():string {
+        var startIndex = this.text.indexOf(" - ");
+        if (startIndex == -1) {
+            return "";
+        }
+        startIndex = startIndex + 3; //+3 skips over the " - "
 
+        var endIndex = this.text.indexOf("https://t.co");
+        //If no link (or the link comes before " - "), take everything until the end of the tweet
+        if (endIndex == -1 || endIndex < startIndex) {
+            endIndex = this.text.length;
+        }
+
+        var result = this.text.substring(startIndex, endIndex);
+        result = result.replace("#Runkeeper", ""); //remove the hashtag RunKeeper adds
+        return result.trim(); //trim removes extra spaces at the start and end
+    }
 
     //returns a boolean, whether the text includes any content written by the person tweeting.
     get written():boolean {
         //TODO: identify whether the tweet is written
-        if (this.text.includes(" - ")) {
-            return true;
+        if (!this.text.includes(" - ")) {
+            return false;
         }
-        return false;
+
+        var extracted = this.extractText();
+
+        //Nothing left after removing the link and hashtag: not written
+        if (extracted == "") {
+            return false;
+        }
+
+        //"TomTom MySports Watch" is added automatically by the TomTom watch, not typed by a person
+        if (extracted == "TomTom MySports Watch") {
+            return false;
+        }
+
+        return true;
     }
 
     get writtenText():string {
         if(!this.written) {
             return "";
         }
-        //TODO: parse the written text from the tweet
-        var startIndex = this.text.indexOf(" - ") + 3; //+3 skips over the " - "
-        var endIndex = this.text.indexOf("https://t.co");
-
-        //Ifno link, take everything until the end of the tweet
-        if (endIndex == -1) {
-            endIndex = this.text.length;
-        }
-        var result = this.text.substring(startIndex, endIndex);
-        return result.trim(); //trim removes extra spaces at the start and end
+        return this.extractText();
     }
 
     get activityType():string {
@@ -61,10 +82,28 @@ class Tweet {
         var words = this.text.split(" ");
 
         //If word [4] is a unit (km or mi), the activity type is word [5]
+        var startWord = 3;
         if (words[4] == "km" || words[4] == "mi") {
-            return words[5];
+            startWord = 5;
         }
-        return words[3];
+        
+        //Keep adding words until we reach a word that comes after the activity name
+        //This keeps two-word names together, like "mtn bike", "nordic walk", "MySports Freestyle"
+        var stopWords = ["with", "-", "workout", "practice", "session", "in"];
+        var name = "";
+
+        for (var i = startWord; i < words.length; i++) {
+            if (stopWords.includes(words[i])) {
+                break;
+            }
+            if (name == "") {
+                name = words[i];
+            } else {
+                name = name + " " + words[i];
+            }
+        }
+
+        return name;
       }
 
     get distance():number {
@@ -89,20 +128,21 @@ class Tweet {
     getHTMLTableRow(rowNumber:number):string {
         //TODO: return a table row which summarizes the tweet with a clickable link to the RunKeeper activity
         //clickable link +find start position
-        var tweetText = this.text;
-        var linkStart = tweetText.indexOf("https://");
+        var words = this.text.split(" ");
+        var tweetText = "";
 
-        if (linkStart != -1) {
-            var linkEnd = tweetText.indexOf(" ", linkStart);
-            if (linkEnd == -1) {
-                linkEnd = tweetText.length;
+        for (var i = 0; i < words.length; i++) {
+            var word = words[i];
+
+            if (word.startsWith("https://")) {
+                word = "<a href='" + word + "' target='_blank'>" + word + "</a>";
             }
 
-            var link = tweetText.substring(linkStart, linkEnd);
-            var linkHTML = "<a href='" + link + "' target='_blank'>" + link + "</a>";
-
-            //Rebuild the tweet: the part before the link + the clickable link + the part after the link
-            tweetText = tweetText.substring(0, linkStart) + linkHTML + tweetText.substring(linkEnd);
+            if (i == 0) {
+                tweetText = word;
+            } else {
+                tweetText = tweetText + " " + word;
+            }
         }
 
         //Build one table row with3 columns: number, activity type
