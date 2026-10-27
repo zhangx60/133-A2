@@ -77,8 +77,9 @@ function parseTweets(runkeeper_tweets) {
 		if (tweet.source == "completed_event") {
 			var type = tweet.activityType;
 
-			//Only keep the top three activity types
-			if (type == firstType || type == secondType || type == thirdType) {
+			//Only keep the top three activity types and skip tweets with no distance 
+			//(like "Just posted a run in 2:36:27"), so they don't count as 0 miles
+			if ((type == firstType || type == secondType || type == thirdType) && tweet.distance > 0) {
 				distanceArray.push({
 					activityType: type,
 					distance: tweet.distance,

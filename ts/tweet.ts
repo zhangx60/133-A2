@@ -47,17 +47,22 @@ class Tweet {
     //returns a boolean, whether the text includes any content written by the person tweeting.
     get written():boolean {
         //TODO: identify whether the tweet is written
+        if (this.source == "miscellaneous") {
+            if (this.text.startsWith("Just linked") || this.text.startsWith("I just ran with") || this.text.startsWith("Completed a")) {
+                return false;
+            }
+            return true;
+        }
+
+        //For other tweets: when a person writes their own text, RunKeeper puts " - " before it
         if (!this.text.includes(" - ")) {
             return false;
         }
-
         var extracted = this.extractText();
-
         //Nothing left after removing the link and hashtag: not written
         if (extracted == "") {
             return false;
         }
-
         //"TomTom MySports Watch" is added automatically by the TomTom watch, not typed by a person
         if (extracted == "TomTom MySports Watch") {
             return false;
@@ -69,6 +74,10 @@ class Tweet {
     get writtenText():string {
         if(!this.written) {
             return "";
+        }
+        //For miscellaneous tweets, the whole tweet is the person's own text
+        if (this.source == "miscellaneous") {
+            return this.text.trim();
         }
         return this.extractText();
     }
