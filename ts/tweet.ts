@@ -75,9 +75,24 @@ class Tweet {
         if(!this.written) {
             return "";
         }
-        //For miscellaneous tweets, the whole tweet is the person's own text
+        //For miscellaneous tweets, the whole tweet is the person's own text,
+        //but we remove the links and the #Runkeeper hashtag so they don't show up in searches
         if (this.source == "miscellaneous") {
-            return this.text.trim();
+            //Turn line breaks into spaces first, so a link right before a line break is its own word
+            var words = this.text.split("\n").join(" ").split(" ");
+            var result = "";
+
+            for (var i = 0; i < words.length; i++) {
+                var word = words[i];
+
+                //Skip links and the #Runkeeper hashtag (in any upper/lower case)
+                if (word.startsWith("https://") || word.toLowerCase() == "#runkeeper") {
+                    continue;
+                }
+
+                result = result + " " + word;
+            }
+            return result.trim();
         }
         return this.extractText();
     }
@@ -137,7 +152,7 @@ class Tweet {
     getHTMLTableRow(rowNumber:number):string {
         //TODO: return a table row which summarizes the tweet with a clickable link to the RunKeeper activity
         //clickable link +find start position
-        var words = this.text.split(" ");
+        var words = this.text.split("\n").join(" ").split(" ");
         var tweetText = "";
 
         for (var i = 0; i < words.length; i++) {
