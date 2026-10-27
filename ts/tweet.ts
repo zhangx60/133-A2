@@ -25,6 +25,30 @@ class Tweet {
         //Else is miscellaneous
         return "miscellaneous";
     }
+    //Helper function: remove links and the #Runkeeper hashtag from some text
+    //Works the same way for every tweet: ignores upper/lower case, and also catches
+    //hashtags with punctuation stuck on the end, like "#runkeeper’" or "#runkeeper…"
+    private cleanText(someText:string):string {
+        //Turn line breaks into spaces first, so a link right before a line break is its own word
+        var words = someText.split("\n").join(" ").split(" ");
+        var result = "";
+
+        for (var i = 0; i < words.length; i++) {
+            var word = words[i];
+
+            //Skip links
+            if (word.startsWith("https://")) {
+                continue;
+            }
+            //Skip the #Runkeeper hashtag (any case, with or without punctuation after it)
+            if (word.toLowerCase().startsWith("#runkeeper")) {
+                continue;
+            }
+
+            result = result + " " + word;
+        }
+        return result.trim(); //trim removes extra spaces at the start and end
+    }
     //Helper function: get the text between " - " and the link, without the #Runkeeper hashtag
     private extractText():string {
         var startIndex = this.text.indexOf(" - ");
@@ -40,8 +64,7 @@ class Tweet {
         }
 
         var result = this.text.substring(startIndex, endIndex);
-        result = result.replace("#Runkeeper", ""); //remove the hashtag RunKeeper adds
-        return result.trim(); //trim removes extra spaces at the start and end
+        return this.cleanText(result);
     }
 
     //returns a boolean, whether the text includes any content written by the person tweeting.
@@ -72,27 +95,12 @@ class Tweet {
     }
 
     get writtenText():string {
-        if(!this.written) {
+         if(!this.written) {
             return "";
         }
-        //For miscellaneous tweets, the whole tweet is the person's own text,
-        //but we remove the links and the #Runkeeper hashtag so they don't show up in searches
+        //For miscellaneous tweets, the whole tweet is the person's own text (after cleaning)
         if (this.source == "miscellaneous") {
-            //Turn line breaks into spaces first, so a link right before a line break is its own word
-            var words = this.text.split("\n").join(" ").split(" ");
-            var result = "";
-
-            for (var i = 0; i < words.length; i++) {
-                var word = words[i];
-
-                //Skip links and the #Runkeeper hashtag (in any upper/lower case)
-                if (word.startsWith("https://") || word.toLowerCase() == "#runkeeper") {
-                    continue;
-                }
-
-                result = result + " " + word;
-            }
-            return result.trim();
+            return this.cleanText(this.text);
         }
         return this.extractText();
     }
