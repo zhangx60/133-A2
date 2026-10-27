@@ -1,4 +1,4 @@
---Readme document for *YOUR NAME*, *YOUR_EMAIL@uci.edu*--
+--Readme document for *XinyuZhang*, *zhangx60@uci.edu*--
 
 1. How many assignment points do you believe you completed (replace the *'s with your numbers)?
 
@@ -28,10 +28,14 @@ How can I install Node.js, npm, and TypeScript on uci Linux server without admin
 Why does TypeScript show a fanotify_mark error when I run it in watch mode？
 Can you check whether my JavaScript function correctly identifies the earliest and latest tweets and updates the dates using DOM manipulation?
 review my GitHub repository against the A2 grading rubric and identify potential bugs, missing features, or areas for improvement
+CHeck mu github repo and tell me if I want to add some bonus features what can I do?
 
 4. What classmates or other individuals did you consult as part of this assignment? What did you discuss?
-
+Nope this is my own work
 
 
 5. Is there anything special we need to know in order to run your code?
-
+The TypeScript file needs to be compiled into JavaScript before running the website. 
+From the project directory, run tsc -p tsconfig.json to generate js/tweet.js.
+Then use live-server to launch the website. I developed the assignment on uci Linux server, 
+where TypeScript's watch mode caused a file system monitoring error, so I used manual compilation instead.
